@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Jb</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="splash_logo_name">Welcome!</string>
+    <string name="navigation_main_current">微微</string>
+    <string name="navigation_main_pps">干货</string>
+    <string name="navigation_main_contact">联系人</string>
+    <string name="navigation_main_care">关注</string>
+    <string name="title_img_desc">头像</string>
+    <string name="take_seat">占位</string>
+    <string name="set_network">network</string>
+	<string name="network_error">network_error</string>
+	<string name="str_female">female</string>
+	<string name="str_male">male</string>
+	<string name="str_today">str_today</string>
+	<string name="str_yesterday">str_yesterday</string>
+	<string name="str_day_before_yesterday">str_day_before_yesterday</string>
+	<string name="str_time_format">str_time_format</string>
+	<string name="str_short_date_format">str_short_date_format</string>
+	<string name="str_date_format">str_date_format</string>
+	<string name="sysmsg_fmt0">sysmsg_fmt0</string>
+	<string name="sysmsg_fmt1">sysmsg_fmt1</string>
+	<string name="sysmsg_fmt2">sysmsg_fmt2</string>
+	<string name="sysmsg_fmt3">sysmsg_fmt3</string>	
+	<string name="sysmsg_fmt4">sysmsg_fmt4</string>	
+	<string name="str_birth_format">str_birth_format</string>
+	<string name="empty"></string>
+	<string name="str_jb">str_jb_text</string>
+    <string name="connecting">ToyVPN is connecting</string>
+    <string name="connected">ToyVPN is connected!</string>
+    <string name="disconnected">ToyVPN is disconnected!</string>
+</resources>
