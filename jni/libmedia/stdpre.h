@@ -41,12 +41,12 @@ inline void safe_destroy_slobj(SLObjectItf &obj){
 #if DEBUG
 inline void slCheckErrorWithStatus(SLresult state, const char* description, SLresult& out){
 	if(state != SL_RESULT_SUCCESS) {
-		LOGE(description);
+		JB_LOGE(description);
 		out = SL_RESULT_SUCCESS;
 	}
 }
 #else
 #define slCheckErrorWithStatus(state, description, out) \
-	if(state != SL_RESULT_SUCCESS) { LOGE(description); out = SL_RESULT_SUCCESS; }
+	if(state != SL_RESULT_SUCCESS) { JB_LOGE(description); out = SL_RESULT_SUCCESS; }
 #endif
 #endif

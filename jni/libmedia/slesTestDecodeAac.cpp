@@ -177,17 +177,17 @@ SLresult AndroidBufferQueueCallback(
     if (endOfEncodedStream) {
         // we continue to receive acknowledgement after each buffer was processed
         if (pBufferContext == (void *) &kEosBufferCntxt) {
-            LOGE("Received EOS completion after EOS\n");
+            JB_LOGE("Received EOS completion after EOS\n");
         } else if (pBufferContext == NULL) {
-            LOGE("Received ADTS completion after EOS\n");
+            JB_LOGE("Received ADTS completion after EOS\n");
         } else {
             fprintf(stderr, "Received acknowledgement after EOS with unexpected context %p\n",
                     pBufferContext);
         }
     } else if (filelen == 0 || totalEncodeCompletions == 5) {
         // signal EOS to the decoder rather than just starving it
-        LOGE("Enqueue EOS: encoded frames=%u, decoded frames=%u\n", encodedFrames, decodedFrames);
-        LOGE("You should now see %u ADTS completion%s followed by 1 EOS completion\n",
+        JB_LOGE("Enqueue EOS: encoded frames=%u, decoded frames=%u\n", encodedFrames, decodedFrames);
+        JB_LOGE("You should now see %u ADTS completion%s followed by 1 EOS completion\n",
                 NB_BUFFERS_IN_ADTS_QUEUE - 1, NB_BUFFERS_IN_ADTS_QUEUE != 2 ? "s" : "");
         SLAndroidBufferItem msgEos;
         msgEos.itemKey = SL_ANDROID_ITEMKEY_EOS;
@@ -395,7 +395,7 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
 //    loc_destMix.outputMix = slDevice()->outputMixObj();
 //    decDest.pLocator = &loc_destMix;
 //    decDest.pFormat = NULL;
-    LOGE("TestDecode 1");
+    JB_LOGE("TestDecode 1");
 
     /* Create the audio player */
     res = (*EngineItf)->CreateAudioPlayer(EngineItf, &player, &decSource, &decDest,
@@ -405,12 +405,12 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
             NUM_EXPLICIT_INTERFACES_FOR_PLAYER - 1 - NUT_TO - NUT_PREF,
 #endif
             iidArray, required);
-    LOGE("Player created\n");
+    JB_LOGE("Player created\n");
 
     /* Realize the player in synchronous mode. */
     res = (*player)->Realize(player, SL_BOOLEAN_FALSE);
     ExitOnError(res);
-    LOGE("Player realized\n");
+    JB_LOGE("Player realized\n");
 
     /* Get the play interface which is implicit */
     res = (*player)->GetInterface(player, SL_IID_PLAY, (void*)&playItf);
@@ -441,9 +441,9 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
     ExitOnError(res);
 
     /* Enqueue buffers to map the region of memory allocated to store the decoded data */
-    LOGE("Enqueueing initial empty buffers to receive decoded PCM data");
+    JB_LOGE("Enqueueing initial empty buffers to receive decoded PCM data");
     for(i = 0 ; i < NB_BUFFERS_IN_PCM_QUEUE ; i++) {
-        LOGE(" %d", i);
+        JB_LOGE(" %d", i);
         res = (*decBuffQueueItf)->Enqueue(decBuffQueueItf, sinkCntxt.pData, BUFFER_SIZE_IN_BYTES);
         ExitOnError(res);
         sinkCntxt.pData += BUFFER_SIZE_IN_BYTES;
@@ -452,7 +452,7 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
             sinkCntxt.pData = sinkCntxt.pDataBase;
         }
     }
-    LOGE("\n");
+    JB_LOGE("\n");
 #endif
 
     /* Initialize the callback for the Android buffer queue of the encoded data */
@@ -461,10 +461,10 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
 
     /* Enqueue the content of our encoded data before starting to play,
        we don't want to starve the player initially */
-    LOGE("Enqueueing initial full buffers of encoded ADTS data");
+    JB_LOGE("Enqueueing initial full buffers of encoded ADTS data");
     for (i=0 ; i < NB_BUFFERS_IN_ADTS_QUEUE ; i++) {
         if (filelen < 7 || frame[0] != 0xFF || (frame[1] & 0xF0) != 0xF0) {
-            LOGE("\ncorrupt ADTS frame encountered; offset %zu bytes\n",
+            JB_LOGE("\ncorrupt ADTS frame encountered; offset %zu bytes\n",
                     frame - (unsigned char *) ptr);
             // Note that prefetch will detect this error soon when it gets a premature EOF
             break;
@@ -474,7 +474,7 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
 		logAdts(adts);
 
         unsigned framelen = ((frame[3] & 3) << 11) | (frame[4] << 3) | (frame[5] >> 5);
-        LOGE(" %d (%u bytes)", i, framelen);
+        JB_LOGE(" %d (%u bytes)", i, framelen);
         res = (*aacBuffQueueItf)->Enqueue(aacBuffQueueItf, NULL /*pBufferContext*/,
                 frame, framelen, NULL, 0);
         ExitOnError(res);
@@ -483,27 +483,27 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
         ++encodedFrames;
         encodedSamples += SAMPLES_PER_AAC_FRAME;
     }
-    LOGE("\n");
+    JB_LOGE("\n");
 
     /* ------------------------------------------------------ */
     /* Start decoding */
-    LOGE("Starting to decode\n");
+    JB_LOGE("Starting to decode\n");
     res = (*playItf)->SetPlayState(playItf, SL_PLAYSTATE_PLAYING);
     ExitOnError(res);
 
     /* Decode until the end of the stream is reached */
-    LOGE("Awaiting notification that all encoded buffers have been enqueued\n");
+    JB_LOGE("Awaiting notification that all encoded buffers have been enqueued\n");
     pthread_mutex_lock(&eosLock);
     while (!eos) {
         if (pauseFrame > 0) {
             if (decodedFrames >= pauseFrame) {
                 pauseFrame = 0;
-                LOGE("Pausing after decoded frame %u for 10 seconds\n", decodedFrames);
+                JB_LOGE("Pausing after decoded frame %u for 10 seconds\n", decodedFrames);
                 pthread_mutex_unlock(&eosLock);
                 res = (*playItf)->SetPlayState(playItf, SL_PLAYSTATE_PAUSED);
                 ExitOnError(res);
                 sleep(10);
-                LOGE("Resuming\n");
+                JB_LOGE("Resuming\n");
                 res = (*playItf)->SetPlayState(playItf, SL_PLAYSTATE_PLAYING);
                 ExitOnError(res);
                 pthread_mutex_lock(&eosLock);
@@ -517,18 +517,18 @@ void TestDecToBuffQueue( SLObjectItf sl, const char *path, int fd)
         }
     }
     pthread_mutex_unlock(&eosLock);
-    LOGE("All encoded buffers have now been enqueued, but there's still more to do\n");
+    JB_LOGE("All encoded buffers have now been enqueued, but there's still more to do\n");
 
-    LOGE("Decode is now finished\n");
+    JB_LOGE("Decode is now finished\n");
 
     pthread_mutex_lock(&eosLock);
-    LOGE("Frame counters: encoded=%u decoded=%u\n", encodedFrames, decodedFrames);
-    LOGE("Sample counters: encoded=%u decoded=%u\n", encodedSamples, decodedSamples);
-    LOGE("Total encode completions received: actual=%u, expected=%u\n",
+    JB_LOGE("Frame counters: encoded=%u decoded=%u\n", encodedFrames, decodedFrames);
+    JB_LOGE("Sample counters: encoded=%u decoded=%u\n", encodedSamples, decodedSamples);
+    JB_LOGE("Total encode completions received: actual=%u, expected=%u\n",
             totalEncodeCompletions, encodedFrames+1/*EOS*/);
     pthread_mutex_unlock(&eosLock);
 
-    LOGE("Frame length statistics:\n");
+    JB_LOGE("Frame length statistics:\n");
 
     /* ------------------------------------------------------ */
     /* End of decoding */
@@ -558,7 +558,7 @@ int playAACDecode()
     int fd;
     fd = open("sdcard/example.aac", O_RDONLY);
     if (fd < 0) {
-    	LOGE("failed to open aac_pcm.pcm");
+    	JB_LOGE("failed to open aac_pcm.pcm");
         return EXIT_FAILURE;
     }
 

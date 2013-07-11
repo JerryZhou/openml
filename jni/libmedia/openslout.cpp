@@ -191,7 +191,7 @@ OpenSLOut::~OpenSLOut(){
 	// as in stop() function , we will call onCallBack()
 	// so you should call stop before object delete
 	IF_DO(mState != SLOUT_STOP,
-			LOGE("openslout should call stop before delete,"
+			JB_LOGE("openslout should call stop before delete,"
 					"leak some event"));
 	IF_DO(mState != SLOUT_STOP, stopInternal() );
 }
@@ -318,11 +318,11 @@ bool OpenSLOut::start(const OpenSLOutFormat &format){
     	slCheckErrorWithStatus(lRes, "Problem registering player callback mask (Error %d).", lRes);
     }
 	else {
-    	LOGE("do not support locatorType: %d", format.locatorType);
+    	JB_LOGE("do not support locatorType: %d", format.locatorType);
     	goto ERROR;
     }
 
-    LOGE("opensl out setpalying");
+    JB_LOGE("opensl out setpalying");
     lRes = (*mPlayer)->SetPlayState(mPlayer, SL_PLAYSTATE_PLAYING);
     if (lRes != SL_RESULT_SUCCESS) goto ERROR;
 
@@ -331,7 +331,7 @@ bool OpenSLOut::start(const OpenSLOutFormat &format){
     return true;
 
 ERROR:
-	LOGE("opensl out error: %d", lRes);
+	JB_LOGE("opensl out error: %d", lRes);
     stop();
     return false;
 }
@@ -405,7 +405,7 @@ void OpenSLOut::playBuffer(void* buffer, int len, const void* context){
     		// Removes any sound from the queue.
     		// lRes = (*mPlayerQueue)->Clear(mPlayerQueue);
     		// if (lRes != SL_RESULT_SUCCESS) goto ERROR;
-    		LOGE("android queue enqueue buffer %d", len);
+    		JB_LOGE("android queue enqueue buffer %d", len);
     		// Plays the new sound.
     		lRes = (*mPlayerAndroidQueue)->Enqueue(mPlayerAndroidQueue, NULL /*pBufferContext*/,
     				buffer, len, NULL, 0);
@@ -429,7 +429,7 @@ void OpenSLOut::playBuffer(void* buffer, int len, const void* context){
    return;
 
 ERROR:
-   LOGE("Error trying to play sound: %d", lRes);
+   JB_LOGE("Error trying to play sound: %d", lRes);
 }
 
 /**
@@ -463,7 +463,7 @@ int OpenSLOut::goOnPush(){
 	return SLERROR_OK;
 
 ERROR:
-	LOGE("go on push error");
+	JB_LOGE("go on push error");
 	return SLERROR_ERR;
 }
 
@@ -490,7 +490,7 @@ int OpenSLOut::goOnPoll(){
 	return SLERROR_OK;
 
 ERROR:
-	LOGE("go on poll error");
+	JB_LOGE("go on poll error");
 	return SLERROR_ERR;
 }
 /**

@@ -66,7 +66,7 @@ void serialTo(AdtsHeader *adts, void *data){
  * do log adts, level : verbose, debug, info, warning, error, fatal(assert)
  * */
 void logAdts(const AdtsHeader &adts, int level){
-	__android_log_print(level, TAG,
+	__android_log_print(level, HUNCENT_TAG,
 			"adts : syncword %d, version %d, layer %d, protection %d, profile %d, \n"
 			"sampleFrequency %d, privateStream %d, channelConfig %d, \n"
 			"originality %d, home %d, copyrighted %d, copyrightStart %d, \n"

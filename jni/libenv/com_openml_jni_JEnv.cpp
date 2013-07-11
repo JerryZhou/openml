@@ -24,13 +24,13 @@ JNIEXPORT jboolean JNICALL Java_com_openml_jni_JEnv_setupJni
 	const char *buffer = env->GetStringUTFChars(apkDir, 0);
 
 	// setup the asset manager
-	LOGI("setup pkg asset: %s", buffer);
+	JB_LOGI("setup pkg asset: %s", buffer);
 	asset_startup(buffer, AAssetManager_fromJava(env, jassetMgr));
 	// setup the opensl-es device
-	LOGI("setup opensl-es device");
+	JB_LOGI("setup opensl-es device");
 	slDevice_start();
 	// test play pcm
-	LOGI("test media");
+	JB_LOGI("test media");
 	test_media_main();
 
 	// release the buffer

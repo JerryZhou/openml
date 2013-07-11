@@ -11,7 +11,7 @@ ThreadMutex bufferMutex;
 std::list<OpenSLBuffer*> records;
 
 void initRecordBuffer(){
-	LOGE("init mutex and buffer");
+	JB_LOGE("init mutex and buffer");
 }
 
 //--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ void recordInPush(void* in, OpenSLBuffer* buffer){
 			// copy data to record
 			OpenSLBuffer *addToRecord = new OpenSLBuffer(*buffer);
 			records.push_back(addToRecord);
-			LOGE("record push: %d", buffer->dataLen);
+			JB_LOGE("record push: %d", buffer->dataLen);
 		}
 	}while(false);
 }
@@ -41,7 +41,7 @@ int streamPollFromRecordWithAutoFill(void* out, OpenSLBuffer* buffer,  void* con
 			// copy data to buffer
 			OpenSLBuffer * recordFront = records.front();
 			*buffer = *recordFront;
-			LOGE("stream poll: %d", buffer->dataLen);
+			JB_LOGE("stream poll: %d", buffer->dataLen);
 			records.pop_front();
 			delete recordFront;
 		}else{
@@ -51,7 +51,7 @@ int streamPollFromRecordWithAutoFill(void* out, OpenSLBuffer* buffer,  void* con
 			pollRecordCount++;
 			buffer->dataLen = buffer->len;
 			memset(buffer->data, 0, buffer->len);
-			LOGE("stream poll-fill empty voice: %d", buffer->len);
+			JB_LOGE("stream poll-fill empty voice: %d", buffer->len);
 		}
 	}while(false);
 
@@ -67,11 +67,11 @@ static size_t filelen;
 static int pollCount = 0;
 int streamPollFromAssetWithAutoFill(void* out, OpenSLBuffer* buffer, void* context){
 	OpenSLOutStream* outStream = (OpenSLOutStream*)(out);
-	LOGE("streamPollFromAssetWithAutoFill");
+	JB_LOGE("streamPollFromAssetWithAutoFill");
 	if(assetToAAC == 0){
 		//fd = open("sdcard/example2.aac", O_RDONLY);
 		assetToAAC = asset_open("assets/000001.mp3");
-		LOGE("streamPollFromAssetWithAutoFill: %d", assetToAAC);
+		JB_LOGE("streamPollFromAssetWithAutoFill: %d", assetToAAC);
 		IF_DO(assetToAAC == 0, return assetToAAC);
 	}
 
@@ -92,7 +92,7 @@ int streamPollFromAssetWithAutoFill(void* out, OpenSLBuffer* buffer, void* conte
 		}else{
 			safe_close_asset(assetToAAC);
 		}
-		LOGE("stream poll data: %d-%d", buffer->len, buffer->dataLen);
+		JB_LOGE("stream poll data: %d-%d", buffer->len, buffer->dataLen);
 	}while(false);
 
 	return SLERROR_OK;
@@ -103,13 +103,13 @@ int streamPollFromAssetWithAutoFill(void* out, OpenSLBuffer* buffer, void* conte
 //---------------------------------------------------------------------------------
 void example_record_to_play(){
 	// record
-	LOGI("init record");
+	JB_LOGI("init record");
 	OpenSLInFormat inFormat;
 	inFormat.slPush = recordInPush;
 	inFormat.recordSize = 4410;
 	startRecord(inFormat, 0);
 
-	LOGI("init stream player");
+	JB_LOGI("init stream player");
 	OpenSLStreamConfig streamPlayRecordFormat;
 	streamPlayRecordFormat.slPoll = streamPollFromRecordWithAutoFill;
 	startStream(streamPlayRecordFormat, 0);
@@ -133,7 +133,7 @@ void example_play_aac_stream_with_harddecode(){
 	sourceFormat.endianness = SL_BYTEORDER_LITTLEENDIAN;
 
 	// decode adts aac to pcm
-	LOGI("init aac decode");
+	JB_LOGI("init aac decode");
 	OpenSLStreamConfig streamConfig;
 	streamConfig.streamType = 0;
 	streamConfig.slPoll = streamPollFromAssetWithAutoFill;
@@ -165,7 +165,7 @@ void example_play_aac_stream_with_harddecode(){
 	playStream(0);
 
 	// play the decode aac stream
-	LOGI("init stream player");
+	JB_LOGI("init stream player");
 	OpenSLStreamConfig streamPlayRecordFormat;
 	streamPlayRecordFormat.dataFormat.dataFormat_PCM = sourceFormat;
 	streamPlayRecordFormat.slPoll = streamPollFromRecordWithAutoFill;

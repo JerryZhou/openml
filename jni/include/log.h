@@ -4,13 +4,13 @@
 #include <android/log.h>
 #include <assert.h>	// assert
 
-#define TAG "hun-cent-jb-jni"
+#define HUNCENT_TAG "hun-cent-jb-jni"
 
-#define LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, TAG, __VA_ARGS__)
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG  , TAG, __VA_ARGS__)
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO   , TAG, __VA_ARGS__)
-#define LOGW(...) __android_log_print(ANDROID_LOG_WARN   , TAG, __VA_ARGS__)
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , TAG, __VA_ARGS__)
+#define JB_LOGV(...) __android_log_print(ANDROID_LOG_VERBOSE, HUNCENT_TAG, __VA_ARGS__)
+#define JB_LOGD(...) __android_log_print(ANDROID_LOG_DEBUG  , HUNCENT_TAG, __VA_ARGS__)
+#define JB_LOGI(...) __android_log_print(ANDROID_LOG_INFO   , HUNCENT_TAG, __VA_ARGS__)
+#define JB_LOGW(...) __android_log_print(ANDROID_LOG_WARN   , HUNCENT_TAG, __VA_ARGS__)
+#define JB_LOGE(...) __android_log_print(ANDROID_LOG_ERROR  , HUNCENT_TAG, __VA_ARGS__)
 
 
 #define IF_DO(con, doit ) do { if(con) { doit; } }while(false)

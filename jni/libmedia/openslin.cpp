@@ -77,7 +77,7 @@ OpenSLIn::~OpenSLIn(){
 	// as in stop() function , we will call onCallBack()
 	// so you should call stop before object delete
 	IF_DO(mState != SLIN_STOP,
-			LOGE("openslout should call stop before delete,"
+			JB_LOGE("openslout should call stop before delete,"
 					"leak some event"));
 	IF_DO(mState != SLIN_STOP, stopInternal() );
 }
@@ -143,7 +143,7 @@ bool OpenSLIn::start(const OpenSLInFormat &format){
 	return true;
 
 ERROR:
-	LOGE("start record failed");
+	JB_LOGE("start record failed");
 	stop();
 	return false;
 }
@@ -226,7 +226,7 @@ int OpenSLIn::record(){
 	return SLERROR_OK;
 
 ERROR:
-	LOGE("error happend in start record!!");
+	JB_LOGE("error happend in start record!!");
 	return SLERROR_ERR;
 }
 
@@ -253,7 +253,7 @@ int OpenSLIn::goOnRecord(){
 	return SLERROR_OK;
 
 ERROR:
-	LOGE("error happend in goon record!!");
+	JB_LOGE("error happend in goon record!!");
 	return SLERROR_ERR;
 }
 

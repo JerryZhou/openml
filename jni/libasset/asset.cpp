@@ -71,12 +71,12 @@ int asset_startup(const char* buffer, AAssetManager* assetMgr){
     pkg_zip = zip_open( buffer, 0, &error );
     strcpy( packageName, buffer );
     if( pkg_zip == NULL ){
-       LOGE("Failed to open apk: %i", error );
+       JB_LOGE("Failed to open apk: %i", error );
        return -1;
     }
-    LOGI("asset successful load: %s", buffer);
+    JB_LOGI("asset successful load: %s", buffer);
     memset(assetsEntrys, 0, sizeof(assetsEntrys));
-    LOGI("accept the assetManager");
+    JB_LOGI("accept the assetManager");
     assetManager = assetMgr;
     return 0;
 }

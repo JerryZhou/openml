@@ -33,13 +33,13 @@ bool OpenSLOutAsset::startPlay(const char* path){
 	//get ext
 	const char* ptr = strrchr(path, '.');
 	if(ptr){
-		LOGI("opensloutasset: start play, ext: %s", ptr);
+		JB_LOGI("opensloutasset: start play, ext: %s", ptr);
 		if(strcasecmp(".PCM", ptr) == 0){
 
 		}else { //if(strcasecmp(".mp3", ptr) == 0){
 			AssetDescriptor descriptor = {0};
 			if(asset_option(0, ASSET_GET_ANDROID_DESCRIPTOR, &descriptor, (void*)path) == 0){
-				LOGI("succesful load asset: %s, fd: %d, offset: %d, length: %d",
+				JB_LOGI("succesful load asset: %s, fd: %d, offset: %d, length: %d",
 						path, descriptor.fd, descriptor.start, descriptor.length);
 				format.formatType = SL_DATAFORMAT_MIME;
 				format.dataFormat.dataFormat_MIME.formatType 		= SL_DATAFORMAT_MIME;
@@ -52,7 +52,7 @@ bool OpenSLOutAsset::startPlay(const char* path){
 		        format.dataLocator.dataLocator_AndroidFD.offset      = descriptor.start;
 		        format.dataLocator.dataLocator_AndroidFD.length      = descriptor.length;
 			}else{
-				LOGE("falied to load mime source: %s", path);
+				JB_LOGE("falied to load mime source: %s", path);
 				return false;
 			}
 		}
@@ -72,7 +72,7 @@ void OpenSLOutAsset::onCallBack(int when, void* context){
 		AssetContext *assetContext = (AssetContext*)(format->context);
 		AssetEntry entry = asset_open(assetContext->path);
 
-		LOGI("on start :%s , %d", assetContext->path, entry);
+		JB_LOGI("on start :%s , %d", assetContext->path, entry);
 		if(entry != 0){
 			safe_close_asset(mEntry);
 			mEntry = entry;
@@ -93,7 +93,7 @@ void OpenSLOutAsset::onCallBack(int when, void* context){
 		poll(&mBufferPoll);
 		playBuffer(&mBufferPoll);
 	}else if(when == WHEN_STOP){
-		LOGI("on stop: %d", mEntry);
+		JB_LOGI("on stop: %d", mEntry);
 		safe_close_asset(mEntry);
 	}else if(when == WHEN_PAUSE){
 		// TODO: imp the pause
@@ -105,7 +105,7 @@ void OpenSLOutAsset::onCallBack(int when, void* context){
 int OpenSLOutAsset::poll(OpenSLBuffer* buffer){
 	IF_DO(mEntry == 0, return SLERROR_FAILED);
 	mBufferPoll.dataLen = asset_read(mEntry, mBufferPoll.data, mBufferPoll.len);
-	LOGI("poll : %d, %d", mBufferPoll.dataLen, mBufferPoll.len);
+	JB_LOGI("poll : %d, %d", mBufferPoll.dataLen, mBufferPoll.len);
 	if(mBufferPoll.dataLen > 0){
 		// we reach the end of asset
 		if(mBufferPoll.dataLen < mBufferPoll.len ){

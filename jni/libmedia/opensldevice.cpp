@@ -188,12 +188,12 @@ void slDevice_start(){
 	J_ASSERT(gslDevice == NULL);
 	gslDevice = new OpenSLDevice();
 	if(!gslDevice->start()){
-		LOGE("Failed to start the slDevice");
+		JB_LOGE("Failed to start the slDevice");
 		goto ERROR;
 	}
 
 	if(!gslDevice->createOutputMixObj()){
-		LOGE("Failed to createOutputMixObj");
+		JB_LOGE("Failed to createOutputMixObj");
 		goto ERROR;
 	}
 
