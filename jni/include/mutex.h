@@ -8,6 +8,7 @@
 //--------------------------------------------------------------------------
 class ThreadMutex{
 public:
+	/// default constructor
 	ThreadMutex(){
 	    pthread_mutexattr_t    attr;
 	    pthread_mutexattr_init(&attr);
@@ -15,6 +16,7 @@ public:
 	    pthread_mutex_init(&mutex, &attr);
 	    pthread_mutexattr_destroy(&attr);
 	}
+	/// default destructor
 	~ThreadMutex(){
 		pthread_mutex_destroy(&mutex);
 	}

@@ -381,10 +381,10 @@ OpenSLOutState OpenSLOut::curState() const{
  *	buffer, len : size given in bytes
  * */
 void OpenSLOut::playBuffer(void* buffer, int len, const void* context){
-	J_ASSERT(mPlayerObj != NULL);
-	IF_DO(len <= 0 , return );
+    J_ASSERT(mPlayerObj != NULL);
+    IF_DO(len <= 0 , return );
 
-	SLresult lRes;
+    SLresult lRes;
     SLuint32 lPlayerState;
     (*mPlayerObj)->GetState(mPlayerObj, &lPlayerState);
 
@@ -501,6 +501,13 @@ void OpenSLOut::stopInternal(){
 	OpenSLObject::stopInternal();
 	// free userdata first
 	IF_DO(mUserData != NULL, freeUserData(mUserData));
+	// stop player
+	SLuint32 lPlayerState;
+	if (mPlayerObj && mPlayer
+		&& ((*mPlayerObj)->GetState(mPlayerObj, &lPlayerState) == SL_RESULT_SUCCESS)
+	    	&& (lPlayerState == SL_OBJECT_STATE_REALIZED)){
+	   (*mPlayer)->SetPlayState(mPlayer, SL_PLAYSTATE_STOPPED); 
+	}
 	// free opensl object
 	safe_destroy_slobj(mPlayerObj);
 	// clear pointer
